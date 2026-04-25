@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhishGuard — Email Forensic Analyzer</title>
+  <meta name="description" content="AI-powered phishing detection and email forensic analysis tool. Detect spoofing, malicious URLs, social engineering and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🛡</span>
+        <span class="logo-text">PhishGuard</span>
+        <span class="logo-badge">FORENSIC AI</span>
+      </div>
+      <nav class="header-nav">
+        <span class="nav-tag">v2.0</span>
+        <span class="status-dot"></span>
+        <span class="status-label">System Online</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main-container">
+
+    <!-- Hero -->
+    <section class="hero">
+      <h1 class="hero-title">
+        <span class="gradient-text">Phishing Email</span>
+        <br />Forensic Analyzer
+      </h1>
+      <p class="hero-sub">
+        Paste any suspicious email below. Our engine checks sender authenticity,
+        malicious URLs, homograph attacks, social engineering patterns and more —
+        instantly generating a forensic report.
+      </p>
+    </section>
+
+    <!-- Input Panel -->
+    <section class="input-panel" id="input-section">
+      <div class="panel-header">
+        <div class="panel-title-row">
+          <span class="panel-icon">📧</span>
+          <h2 class="panel-title">Email Input</h2>
+        </div>
+        <div class="panel-actions">
+          <button class="btn-ghost" id="btn-sample" title="Load a phishing sample">
+            Load Sample
+          </button>
+          <button class="btn-ghost" id="btn-clear" title="Clear the input">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <div class="textarea-wrapper">
+        <textarea
+          id="email-input"
+          placeholder="Paste the full email here — including headers (From, Reply-To, Return-Path, Subject) and body text with any links..."
+          spellcheck="false"
+        ></textarea>
+        <div class="char-count" id="char-count">0 characters</div>
+      </div>
+
+      <div class="input-footer">
+        <div class="input-tips">
+          <span class="tip-icon">💡</span>
+          <span>Include headers for deeper analysis. Tip: In Gmail → ⋮ → "Show original"</span>
+        </div>
+        <button class="btn-analyze" id="btn-analyze" onclick="analyzeEmail()">
+          <span class="btn-icon">🔍</span>
+          <span class="btn-text">Analyze Email</span>
+          <div class="btn-loader" id="btn-loader"></div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Results Panel (hidden initially) -->
+    <section class="results-panel" id="results-panel" style="display:none;">
+
+      <!-- Risk Header -->
+      <div class="risk-header" id="risk-header">
+        <div class="risk-left">
+          <div class="verdict-badge" id="verdict-badge"></div>
+          <div class="risk-info">
+            <div class="risk-level" id="risk-level-text"></div>
+            <div class="risk-sublabel">Phishing Risk Assessment</div>
+          </div>
+        </div>
+
+        <div class="risk-gauge-wrap">
+          <svg class="risk-gauge" viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#22c55e"/>
+                <stop offset="50%" style="stop-color:#eab308"/>
+                <stop offset="100%" style="stop-color:#ef4444"/>
+              </linearGradient>
+            </defs>
+            <!-- Track -->
+            <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8" stroke-linecap="round"/>
+            <!-- Fill arc -->
+            <path id="gauge-arc" d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 157"/>
+            <!-- Needle -->
+            <line id="gauge-needle" x1="60" y1="65" x2="60" y2="22" stroke="white" stroke-width="2" stroke-linecap="round" transform="rotate(0, 60, 65)"/>
+            <circle cx="60" cy="65" r="4" fill="white"/>
+          </svg>
+          <div class="gauge-score" id="gauge-score">0</div>
+          <div class="gauge-label">/ 100</div>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stat-cards" id="stat-cards"></div>
+
+      <!-- Findings -->
+      <div class="section-block" id="findings-block" style="display:none;">
+        <div class="section-head">
+          <span class="section-icon">⚠️</span>
+          <h3 class="section-title">Forensic Findings</h3>
+        </div>
+        <div class="findings-list" id="findings-list"></div>
+      </div>
+
+      <!-- URL Analysis -->
+      <div class="section-block" id="url-block" style="display:none;">
+        <div class="section-head">
+          <span class="section-icon">🔗</span>
+          <h3 class="section-title">URL Analysis</h3>
+        </div>
+        <div class="url-table-wrap">
+          <table class="url-table" id="url-table">
+            <thead>
+              <tr>
+                <th>URL</th>
+                <th>Domain</th>
+                <th>Risk</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody id="url-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Headers Found -->
+      <div class="section-block" id="headers-block" style="display:none;">
+        <div class="section-head">
+          <span class="section-icon">📋</span>
+          <h3 class="section-title">Detected Headers</h3>
+        </div>
+        <div class="headers-grid" id="headers-grid"></div>
+      </div>
+
+      <!-- Conclusion -->
+      <div class="conclusion-block" id="conclusion-block">
+        <div class="conclusion-icon" id="conclusion-icon"></div>
+        <div class="conclusion-content">
+          <h3 class="conclusion-title" id="conclusion-title"></h3>
+          <p class="conclusion-text" id="conclusion-text"></p>
+        </div>
+      </div>
+
+      <!-- New Analysis -->
+      <div class="new-analysis-row">
+        <button class="btn-ghost-lg" onclick="resetAnalysis()">
+          ← Analyze Another Email
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>PhishGuard Forensic Analyzer &nbsp;|&nbsp; Built for Hackathon 2 &nbsp;|&nbsp; Educational Use Only</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

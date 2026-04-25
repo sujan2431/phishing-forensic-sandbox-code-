@@ -1,0 +1,26 @@
+From: PayPal Security <security@paypa1-support.xyz>
+Reply-To: phisher@gmail.com
+Return-Path: <bounce@evil-mailer.ru>
+To: customer@example.com
+Subject: URGENT: Your PayPal account has been suspended!
+Date: Mon, 25 Apr 2026 10:00:00 +0000
+
+Dear Customer,
+
+We have detected suspicious activity on your PayPal account. Your account has been temporarily suspended due to unauthorized access attempts.
+
+You must verify your account IMMEDIATELY or it will be permanently closed within 24 hours.
+
+Click here to restore your account now:
+http://paypa1-verify.xyz/restore?token=abc123
+
+Alternatively visit: http://192.168.1.254/paypal/login
+
+We have also sent a document to review: Account_Statement.exe
+
+Failure to respond immediately will result in legal action and your account will be permanently terminated.
+
+Congratulations! You have also won a $500 reward. Claim your prize here:
+https://bit.ly/freeprize99
+
+PayPal Security Team
